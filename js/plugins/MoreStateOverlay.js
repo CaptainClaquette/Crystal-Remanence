@@ -69,6 +69,14 @@ Hakuryo.Core = Hakuryo.Core || {};
  * Changelog
  * ============================================================================
  *
+* Version 1.04:
+ * - Fixed the incompatibility problem with Yanfly's Animated Battlers
+ *
+ * Version 1.03:
+ * - Change the way how enemy animation overlay is activated.
+ * - if you're using Yanfly's Animated Battlers plugin please set EnemyOverlay to false
+ *   in order avoid conflict between Yep plugins an mine. ( i will try to fix this quickly)
+ *
  * Version 1.02:
  * - Add an enemy overlay possibility.
  * - Add a param to activate or not enemy overlay.
@@ -118,38 +126,11 @@ DataManager.processCoreNotetags1 = function(group) {
 // Plugin Code
 //=============================================================================
 
-
-Sprite_Enemy.prototype.initMembers = function() {
-    Sprite_Battler.prototype.initMembers.call(this);
-    this._enemy = null;
-    this._appeared = false;
-    this._battlerName = '';
-    this._battlerHue = 0;
-    this._effectType = null;
-    this._effectDuration = 0;
-    this._shake = 0;
-    this.createStateIconSprite();
-    if(Hakuryo.Param.EnemyOverlay ==='true') this.createStateSprite();
-};
-
-Sprite_Enemy.prototype.createStateIconSprite = function() {
-    this._stateIconSprite = new Sprite_StateIcon();
-    this.addChild(this._stateIconSprite);
-};
-
-Sprite_Enemy.prototype.createStateSprite = function() {
-    this._stateSprite = new Sprite_StateOverlay();
-    this.addChild(this._stateSprite);
-};
-
+Hakuryo.Core.setBattler = Yanfly.SVE.Sprite_Enemy_setBattler;
 Sprite_Enemy.prototype.setBattler = function(battler) {
-    Sprite_Battler.prototype.setBattler.call(this, battler);
-    this._enemy = battler;
-    this.setHome(battler.screenX(), battler.screenY());
-    this._stateIconSprite.setup(battler);
+    Hakuryo.Core.setBattler.call(this, battler);    
     if(Hakuryo.Param.EnemyOverlay === 'true') this._stateSprite.setup(battler);
 };
-
 
 //=============================================================================
 // End of File
